@@ -20,7 +20,7 @@ $oldInput = $oldInput ?? [];
     <title>Setor Sampah - <?= APP_NAME ?></title>
     <link rel="stylesheet" href="<?= base_url('assets/css/style.css') ?>">
     <style type="text/css">
-        body { margin: 0; font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; background: #f5f5f5; }
+        body { margin: 0; font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; background: #f5f7fa; }
         .dashboard-wrapper { display: flex; min-height: 100vh; }
         .sidebar {
             width: 260px;
@@ -72,10 +72,10 @@ $oldInput = $oldInput ?? [];
             display: flex;
             justify-content: space-between;
             align-items: center;
-            margin-bottom: 2rem;
+            margin-bottom: 1rem;
         }
-        .page-header h1 { margin: 0; font-size: 1.5rem; color: #1b5e20; }
-        .breadcrumb { color: #888; font-size: 0.9rem; }
+        .page-header h1 { margin: 0; font-size: 1.5rem; color: #12324a; }
+        .breadcrumb { color: #6b7280; font-size: 0.9rem; }
         .breadcrumb a { color: #2e7d32; text-decoration: none; }
 
         /* Layout */
@@ -83,13 +83,26 @@ $oldInput = $oldInput ?? [];
             display: grid;
             grid-template-columns: 2fr 1fr;
             gap: 1.5rem;
+            align-items: start;
         }
+
+        /* Hero / top banner */
+        .hero {
+            background: linear-gradient(90deg,#174a7a 0%, #2a67a7 100%);
+            color: white;
+            border-radius: 12px;
+            padding: 1.5rem 1.75rem;
+            margin-bottom: 1.25rem;
+            box-shadow: 0 6px 18px rgba(15,40,80,0.1);
+        }
+        .hero .greeting { font-size: 1rem; opacity: 0.9; }
+        .hero .username { font-size: 1.6rem; font-weight: 700; margin-top: 0.25rem; }
 
         /* Card */
         .card {
             background: white;
             border-radius: 12px;
-            box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+            box-shadow: 0 2px 8px rgba(0,0,0,0.06);
             overflow: hidden;
         }
         .card-header {
@@ -98,6 +111,32 @@ $oldInput = $oldInput ?? [];
         }
         .card-header h3 { margin: 0; font-size: 1.1rem; color: #333; }
         .card-body { padding: 1.5rem; }
+
+        /* Big balance card (left) */
+        .big-balance {
+            background: linear-gradient(180deg,#103a6a 0%, #0f2e57 100%);
+            color: white;
+            border-radius: 14px;
+            padding: 1.25rem 1.5rem;
+            display: flex;
+            gap: 1rem;
+            align-items: center;
+            justify-content: space-between;
+            box-shadow: 0 8px 30px rgba(15,40,80,0.08);
+        }
+        .big-balance .amount { font-size: 2rem; font-weight: 800; letter-spacing: 0.5px; }
+        .big-balance .meta { font-size: 0.9rem; opacity: 0.85; }
+        .big-balance .btn-cair { background: #2ebd67; color: white; border-radius: 999px; padding: 0.6rem 1.15rem; border: none; font-weight: 700; }
+
+        /* Stats grid on right column */
+        .stats-grid { display: grid; grid-template-columns: repeat(2,1fr); gap: 0.9rem; margin-bottom: 1rem; }
+        .stat-card { background: white; border-radius: 10px; padding: 0.9rem; box-shadow: 0 4px 12px rgba(15,40,80,0.04); }
+        .stat-card .value { font-size: 1.25rem; font-weight: 700; color: #12324a; }
+        .stat-card .label { color: #6b7280; font-size: 0.85rem; margin-top: 0.25rem; }
+
+        /* Quick action row */
+        .action-row { display: flex; gap: 0.9rem; margin-top: 1rem; }
+        .action-btn { flex: 1; background: #eef6ff; border-radius: 10px; padding: 0.8rem; text-align: center; color: #12324a; text-decoration: none; font-weight: 600; display: inline-block; }
 
         /* Form */
         .form-group {
@@ -250,8 +289,33 @@ $oldInput = $oldInput ?? [];
                 </div>
             </div>
 
+            <div class="hero">
+                <div>
+                    <div class="greeting">Selamat datang,</div>
+                    <div class="username"><?= htmlspecialchars($nasabah['nama'] ?? 'Nasabah') ?> 👋</div>
+                    <div class="meta" style="margin-top:6px; opacity:0.9;">Bank Sampah Digital</div>
+                </div>
+            </div>
+
             <div class="content-grid">
                 <div>
+                    <div class="big-balance" style="margin-bottom:1rem;">
+                        <div>
+                            <div style="font-size:0.9rem; opacity:0.9;">Total Saldo Tabungan</div>
+                            <div class="amount"><?= formatRupiah($saldo) ?></div>
+                            <div class="meta" style="margin-top:6px;">+ Rp 0 bulan ini</div>
+                        </div>
+                        <div style="display:flex;flex-direction:column;gap:0.6rem;align-items:flex-end;">
+                            <a href="<?= base_url('nasabah/cairkan') ?>" class="btn-cair">Cairkan Saldo</a>
+                        </div>
+                    </div>
+
+                    <div class="action-row">
+                        <a href="<?= base_url('nasabah/setor') ?>" class="action-btn">🗑️ Setor Sampah</a>
+                        <a href="<?= base_url('nasabah/dashboard') ?>" class="action-btn">📈 Lihat Saldo</a>
+                        <a href="<?= base_url('nasabah/riwayat') ?>" class="action-btn">📜 Riwayat</a>
+                        <a href="<?= base_url('nasabah/cari') ?>" class="action-btn">📍 Cari Bank</a>
+                    </div>
                     <div class="card">
                         <div class="card-header">
                             <h3>Form Penyetoran Sampah</h3>
@@ -304,6 +368,25 @@ $oldInput = $oldInput ?? [];
                             <h3>Saldo Anda</h3>
                         </div>
                         <div class="card-body">
+                            <div class="stats-grid">
+                                <div class="stat-card">
+                                    <div class="value"><?= htmlspecialchars(isset($totalBerat) ? $totalBerat . ' kg' : '0 kg') ?></div>
+                                    <div class="label">Total Sampah Disetor</div>
+                                </div>
+                                <div class="stat-card">
+                                    <div class="value"><?= htmlspecialchars(isset($totalTransaksi) ? $totalTransaksi . ' kali' : '0 kali') ?></div>
+                                    <div class="label">Total Transaksi</div>
+                                </div>
+                                <div class="stat-card">
+                                    <div class="value"><?= htmlspecialchars(isset($level) ? 'Level ' . $level : 'Level 1') ?></div>
+                                    <div class="label">Nasabah Bintang</div>
+                                </div>
+                                <div class="stat-card">
+                                    <div class="value"><?= htmlspecialchars(isset($lamaBergabung) ? $lamaBergabung . ' bln' : '0 bln') ?></div>
+                                    <div class="label">Masa Bergabung</div>
+                                </div>
+                            </div>
+
                             <div class="sidebar-card">
                                 <label>Saldo Tabungan</label>
                                 <div class="value"><?= formatRupiah($saldo) ?></div>
