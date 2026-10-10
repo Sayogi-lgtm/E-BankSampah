@@ -161,15 +161,36 @@ class NasabahController
             'tujuan_transfer' => $_POST['tujuan_transfer'] ?? ''
         ];
 
-        // Validasi
-        $errors = PengajuanPencairan::validate($oldInput, $saldoTersedia);
+        // Normalisasi jumlah dari format Indonesia (100.000) ke numeric (100000)
+        // str_replace: hapus titik thousand separator, ubah koma ke titik desimal
+        $jumlah = (float) str_replace(['.', ','], ['', '.'], $oldInput['jumlah']);
 
-        if (!empty($errors)) {
-            return $errors;
+        // Validasi jumlah minimum DAN saldo sebelum memanggil model validate
+        // Minimal pencairan adalah 10000
+        if ($jumlah < PengajuanPencairan::MINIMAL_PENCAIRAN) {
+            return ['Jumlah minimal pencairan adalah Rp ' . number_format(PengajuanPencairan::MINIMAL_PENCAIRAN, 0, ',', '.')];
         }
 
-        // Konversi jumlah ke float
-        $jumlah = (float) str_replace(['.', ','], ['', '.'], $oldInput['jumlah']);
+        // Validasi tidak melebihi saldo
+        if ($jumlah > $saldoTersedia) {
+            return ['Jumlah pencairan melebihi saldo yang tersedia (Rp ' . number_format($saldoTersedia, 0, ',', '.') . ').'];
+        }
+
+        // Validasi metode
+        if (!in_array($oldInput['metode'], ['TUNAI', 'TRANSFER'])) {
+            return ['Metode pencairan harus dipilih.'];
+        }
+
+        // Validasi tujuan transfer jika metode TRANSFER
+        if ($oldInput['metode'] === 'TRANSFER') {
+            $tujuan = trim($oldInput['tujuan_transfer'] ?? '');
+            if (empty($tujuan)) {
+                return ['Tujuan transfer (nomor rekening/e-wallet) wajib diisi.'];
+            }
+            if (strlen($tujuan) < 8) {
+                return ['Nomor tujuan transfer terlalu pendek.'];
+            }
+        }
 
         // Siapkan data untuk disimpan
         $data = [
@@ -187,8 +208,7 @@ class NasabahController
             redirect('nasabah/cairkan');
             return [];
         } else {
-            $errors[] = 'Gagal menyimpan pengajuan. Silakan coba lagi.';
-            return $errors;
+            return ['Gagal menyimpan pengajuan. Silakan coba lagi.'];
         }
     }
 

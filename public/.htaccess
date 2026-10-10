@@ -1,7 +1,7 @@
 # Aktifkan rewrite engine
 RewriteEngine On
 
-# Base path: /belajar_ai/public/
+# Base path: /Project-Backend-BankSampah/public/
 RewriteBase /belajar_ai/public/
 
 # Jika file fisik ada, langsung serve

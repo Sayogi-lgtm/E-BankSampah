@@ -6,7 +6,18 @@
  * Compatible dengan PHP 7.3+
  */
 
+/** @var array|null $flash */
+/** @var float $saldo */
+/** @var float $saldoTersedia */
+/** @var float $totalTerikat */
+/** @var array $errors */
+/** @var array $oldInput */
+
 // Format uang ke Rupiah Indonesia
+/**
+ * @param float|int $number
+ * @return string
+ */
 function formatRupiah($number): string
 {
     return 'Rp ' . number_format((float) $number, 0, ',', '.');
